@@ -46,7 +46,7 @@ download_entire_website_wget() {
     --user-agent=Mozilla \
     --continue \
     --no-clobber \
-    --directory-prefix="$HOME/Downloads/downloaded-websites/$DOMAIN" \
+    --directory-prefix="$HOME/Downloads/downloaded-websites-wget/$DOMAIN" \
     --domains ${DOMAIN_STRIPPED} \
     ${URL}
 }
