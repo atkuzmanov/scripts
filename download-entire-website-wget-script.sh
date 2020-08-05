@@ -118,7 +118,8 @@ download_entire_website_wget
 ## https://unix.stackexchange.com/questions/480846/removing-first-forward-slash-from-string
 ## https://stackoverflow.com/questions/39646508/bash-remove-forward-slash
 ## https://stackoverflow.com/questions/9018723/what-is-the-simplest-way-to-remove-a-trailing-slash-from-each-parameter
-## 
 ## https://www.cyberciti.biz/faq/get-extract-domain-name-from-url-in-linux-unix-bash/
+## https://stackoverflow.com/questions/2871181/replacing-some-characters-in-a-string-with-another-character
+## https://unix.stackexchange.com/questions/272596/replace-character-x-with-character-y-in-a-string-with-bash
 ## 
 ################################
