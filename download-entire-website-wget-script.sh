@@ -8,6 +8,7 @@ set -e
 
 URL="$1"
 DOMAIN=""
+DOMAIN_STRIPPED=""
 
 ################################
 
@@ -19,8 +20,17 @@ extract_domain_name
 
 ################################
 
-echo ${URL}
-echo ${DOMAIN}
+strip_www_from_domain_name() {
+    DOMAIN_STRIPPED=$(echo "$DOMAIN" | sed "s/^www\.//")
+}
+
+strip_www_from_domain_name
+
+################################
+
+# echo ${URL}
+# echo ${DOMAIN}
+# echo ${DOMAIN_STRIPPED}
 
 ################################
 
@@ -37,7 +47,7 @@ download_entire_website_wget() {
     --continue \
     --no-clobber \
     --directory-prefix="$HOME/Downloads/downloaded-websites/$DOMAIN" \
-    --domains ${DOMAIN} \
+    --domains ${DOMAIN_STRIPPED} \
     ${URL}
 }
 
