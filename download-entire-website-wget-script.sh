@@ -6,9 +6,15 @@ set -e
 
 ################################
 
+echo "Usage -> ./download-entire-website-wget-script.sh https://www.example.com/path/"
+
+################################
+
 URL="$1"
 DOMAIN=""
 DOMAIN_STRIPPED=""
+URL_PROTOCOL_STRIPPED=""
+TARGET_DOWNLOAD_DIR_NAME=""
 
 ################################
 
@@ -28,9 +34,49 @@ strip_www_from_domain_name
 
 ################################
 
+strip_protocol_from_domain_name() {
+    # URL_PROTOCOL_STRIPPED=$(echo "$URL" | sed "s/^www\.//")
+
+    f="$URL"
+
+    ## Remove protocol part of url
+    f="${f#http://}"
+    f="${f#https://}"
+    f="${f#ftp://}"
+    f="${f#scp://}"
+    f="${f#scp://}"
+    f="${f#sftp://}"
+    
+    ## Remove username and/or username:password part of URL
+    f="${f#*:*@}"
+    f="${f#*@}"
+    
+    ## Remove rest of urls
+    # f=${f%%/*}
+
+    URL_PROTOCOL_STRIPPED="$f"
+}
+
+strip_protocol_from_domain_name
+
+################################
+
+generate_target_download_dir_name () {
+    # TARGET_DOWNLOAD_DIR_NAME=$(echo $URL_PROTOCOL_STRIPPED | sed 's@/@@g')
+    temp1=${URL_PROTOCOL_STRIPPED////$'_'}
+    temp2=${temp1//./$'-'}
+    TARGET_DOWNLOAD_DIR_NAME="$HOME/Downloads/downloaded-websites-wget/$temp2"
+}
+
+generate_target_download_dir_name
+
+################################
+
 # echo ${URL}
 # echo ${DOMAIN}
 # echo ${DOMAIN_STRIPPED}
+# echo ${URL_PROTOCOL_STRIPPED}
+# echo ${TARGET_DOWNLOAD_DIR_NAME}
 
 ################################
 
@@ -46,7 +92,7 @@ download_entire_website_wget() {
     --user-agent=Mozilla \
     --continue \
     --no-clobber \
-    --directory-prefix="$HOME/Downloads/downloaded-websites-wget/$DOMAIN" \
+    --directory-prefix="$TARGET_DOWNLOAD_DIR_NAME" \
     --domains ${DOMAIN_STRIPPED} \
     ${URL}
 }
@@ -68,5 +114,11 @@ download_entire_website_wget
 ## https://www.lifewire.com/pass-arguments-to-bash-script-2200571
 ## https://www.baeldung.com/linux/use-command-line-arguments-in-bash-script
 ## http://linuxcommand.org/lc3_wss0120.php
+## 
+## https://unix.stackexchange.com/questions/480846/removing-first-forward-slash-from-string
+## https://stackoverflow.com/questions/39646508/bash-remove-forward-slash
+## https://stackoverflow.com/questions/9018723/what-is-the-simplest-way-to-remove-a-trailing-slash-from-each-parameter
+## 
+## https://www.cyberciti.biz/faq/get-extract-domain-name-from-url-in-linux-unix-bash/
 ## 
 ################################
