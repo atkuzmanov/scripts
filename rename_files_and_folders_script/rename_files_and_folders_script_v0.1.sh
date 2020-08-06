@@ -5,12 +5,13 @@ set -e
 ################################
 
 declare -a STRINGS_TO_REPLACE
-STRINGS_TO_REPLACE=("alk8915" "alk198915")
+STRINGS_TO_REPLACE=("tag2086" "tag202086")
 # STRINGS_TO_REPLACE+=("$n")
 # for current_string in "${STRINGS_TO_REPLACE[@]}" ;
 # do
 #     echo $current_string
 # done
+STRING_TO_ADD_IF_NOT_PRESENT="tag20200806"
 
 ################################
 
@@ -22,22 +23,61 @@ STRINGS_TO_REPLACE=("alk8915" "alk198915")
 ## https://superuser.com/questions/213134/recursively-rename-files-change-extension-in-linux
 ## https://stackoverflow.com/questions/965053/extract-filename-and-extension-in-bash
 
+## TODO: wip not working yet
+
 rename_files_and_folders() {
     while IFS= read -r -d '' n; do
-        for current_string in "${STRINGS_TO_REPLACE[@]}" ;
-        do
-            filename="${n##*/}"
-            if [[ "$filename" == *"$current_string"* ]] || ! [[ "$filename" == *"alk19890105"* ]]; 
-            then
-                echo "Will rename $n"
-                break;
-            fi
-        done
-        # echo "$n"
-    done < <(find . \( -depth -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
+
+        # filename="${n##*/}"
+        # currentfile="${n#.}"
+
+        # if [[ -f "$n" ]] && [[ ! -d "$n" ]];
+        # then
+
+            for current_string in "${STRINGS_TO_REPLACE[@]}" ;
+            do
+                if [[ "$n" == *"$current_string"* ]]; 
+                then
+                    echo "Will rename $n"
+                    test -e "$n" &&
+                        rename -d "$current_string" "$n"
+                    break;
+                fi
+            done
+
+        # fi
+
+
+    done < <(find . \( -type f -name "[!.]*" \) -print0)
 }
 
 rename_files_and_folders
+
+rename_folders_and_dirs() {
+    while IFS= read -r -d '' n; do
+
+
+        if [[ -d "$n" ]];
+        then
+
+        for current_string in "${STRINGS_TO_REPLACE[@]}" ;
+        do
+            if [[ "$n" == *"$current_string"* ]]; 
+            then
+                echo "Will rename $n"
+                test -e "$n" &&
+                    rename -d "$current_string" "$n"
+                break;
+            fi
+        done
+
+        fi
+
+    done < <(find . \( -depth -name "[!.]*" \) -print0)
+}
+
+# rename_folders_and_dirs
+
 
 ################################
 ################################
@@ -60,6 +100,8 @@ rename_files_and_folders
 #     done < <(find . \( -depth -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
 # }
 # rename_files_and_folders
+
+# done < <(find . \( -type f -o -type d -name "[!.]*" \) -print0)
 
 ################################
 
