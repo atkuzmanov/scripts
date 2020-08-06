@@ -17,6 +17,7 @@ STRINGS_TO_REPLACE=("alk8915" "alk198915")
 ## https://unix.stackexchange.com/questions/139363/recursively-iterate-through-files-in-a-directory
 ## https://askubuntu.com/questions/266179/how-to-exclude-ignore-hidden-files-and-directories-in-a-wildcard-embedded-find
 ## https://stackoverflow.com/questions/229551/how-to-check-if-a-string-contains-a-substring-in-bash
+## https://superuser.com/questions/701805/nix-find-type-flag-can-it-accept-multiple-types
 
 rename_files_and_folders() {
     while IFS= read -r -d '' n; do
