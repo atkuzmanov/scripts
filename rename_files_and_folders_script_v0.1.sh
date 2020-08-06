@@ -29,12 +29,11 @@ rename_files_and_folders() {
             if [[ "$n" == *"$current_string"* ]] || ! [[ "$n" =~ .*"alk19890105".* ]]; 
             then
                 echo "Will rename $n"
+                break;
             fi
         done
-
         # echo "$n"
     done < <(find . \( -depth -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
-    
 }
 
 rename_files_and_folders
