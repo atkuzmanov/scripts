@@ -22,23 +22,22 @@ STRINGS_TO_REPLACE=("alk8915" "alk198915")
 rename_files_and_folders() {
     while IFS= read -r -d '' n; do
 
-        # if [[ "$n" == *"alk19890105"* ]]; 
-        # then
-        #     echo "Skipping $n"
-        # else
-        #     for current_string in "${STRINGS_TO_REPLACE[@]}" ;
-        #     do
-        #         if [[ "$n" == *"$current_string"* ]]; 
-        #         then
-        #             echo $n
-        #         fi
-        #     done
-        # fi
+        if [[ "$n" == *"alk19890105"* ]]; 
+        then
+            echo "Skipping $n"
+        else
+            for current_string in "${STRINGS_TO_REPLACE[@]}" ;
+            do
+                if [[ "$n" == *"$current_string"* ]]; 
+                then
+                    echo $n
+                fi
+            done
+        fi
 
-        echo "$n"
-    # done < <(find . \( ! -regex '.*/\..*' ! -iname ".*" -type d -o -type f \) -print0)
+        # echo "$n"
     done < <(find . \( -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
-    # done < <(find . \( ! -regex '.*/\..*'  ! -iname ".*" -type d -o -type f \) -print0)
+    
 }
 
 rename_files_and_folders
@@ -47,6 +46,8 @@ rename_files_and_folders
 
 test_f1() {
     echo "test"
+    # done < <(find . \( ! -regex '.*/\..*' ! -iname ".*" -type d -o -type f \) -print0)
+    # done < <(find . \( -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
 }
 
 # test_f1
