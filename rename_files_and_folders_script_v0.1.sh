@@ -23,7 +23,6 @@ STRINGS_TO_REPLACE=("alk8915" "alk198915")
 
 rename_files_and_folders() {
     while IFS= read -r -d '' n; do
-
         for current_string in "${STRINGS_TO_REPLACE[@]}" ;
         do
             if [[ "$n" == *"$current_string"* ]] || ! [[ "$n" =~ .*"alk19890105".* ]]; 
@@ -39,6 +38,11 @@ rename_files_and_folders() {
 rename_files_and_folders
 
 ################################
+################################
+################################
+
+## TODO: clean up draft work below
+
 ## v0.2 deprecated
 # rename_files_and_folders() {
 #     while IFS= read -r -d '' n; do
@@ -85,22 +89,23 @@ rename_files_and_folders
 
 ################################
 
-test_f1() {
-    echo "test"
-    # done < <(find . \( ! -regex '.*/\..*' ! -iname ".*" -type d -o -type f \) -print0)
-    # done < <(find . \( -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
-}
-
-# test_f1
+# test_f1() {
+#     echo "test"
+#     ## done < <(find . \( ! -regex '.*/\..*' ! -iname ".*" -type d -o -type f \) -print0)
+#     ## done < <(find . \( -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
+# }
+# # test_f1
 
 ################################
     
-    ## maybe use this if recursive is not needed
-    ## or use find and add mindepth and maxdepth
-    # for f in * ;
-    # do
-        # test -f "$n" || echo "$n is not a file."
-        # test -d "$n" || echo "$n is not a directory."
-    # done
+## maybe use this if recursive is not needed
+## or use find and add mindepth and maxdepth
+# for f in * ;
+# do
+    # test -f "$n" || echo "$n is not a file."
+    # test -d "$n" || echo "$n is not a directory."
+# done
 
+################################
+################################
 ################################
