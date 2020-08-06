@@ -37,7 +37,8 @@ rename_files_and_folders() {
 
         echo "$n"
     # done < <(find . \( ! -regex '.*/\..*' ! -iname ".*" -type d -o -type f \) -print0)
-    done < <(find . -type d -path '*/\.*' -prune -o -not -name '.*' -type f -print0)
+    done < <(find . \( -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
+    # done < <(find . \( ! -regex '.*/\..*'  ! -iname ".*" -type d -o -type f \) -print0)
 }
 
 rename_files_and_folders
