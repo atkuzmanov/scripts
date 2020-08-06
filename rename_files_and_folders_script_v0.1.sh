@@ -26,7 +26,7 @@ rename_files_and_folders() {
 
         for current_string in "${STRINGS_TO_REPLACE[@]}" ;
         do
-            if [[ "$n" == *"$current_string"* ]]; 
+            if [[ "$n" == *"$current_string"* ]] || ! [[ "$n" =~ .*"alk19890105".* ]]; 
             then
                 echo "Will rename $n"
             fi
