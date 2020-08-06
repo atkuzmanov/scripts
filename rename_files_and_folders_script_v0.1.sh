@@ -20,6 +20,7 @@ STRINGS_TO_REPLACE=("alk8915" "alk198915")
 ## https://superuser.com/questions/701805/nix-find-type-flag-can-it-accept-multiple-types
 ## https://stackoverflow.com/questions/15012631/rename-files-and-directories-recursively-under-ubuntu-bash
 ## https://superuser.com/questions/213134/recursively-rename-files-change-extension-in-linux
+## https://stackoverflow.com/questions/965053/extract-filename-and-extension-in-bash
 
 rename_files_and_folders() {
     while IFS= read -r -d '' n; do
@@ -38,18 +39,6 @@ rename_files_and_folders() {
 
 rename_files_and_folders
 
-# rename_files_and_folders2() {
-#     while IFS= read -r -d '' m; do
-#         if ! [[ "$m" == *"alk19890105"* ]]; 
-#         then
-#             echo ">> Will rename $m"
-#         fi
-#         # echo "$m"
-#     done < <(find . \( -depth -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
-# }
-
-# rename_files_and_folders2
-
 ################################
 ################################
 ################################
@@ -57,7 +46,6 @@ rename_files_and_folders
 ## TODO: clean up draft work below
 
 ## v0.3 deprecated
-
 # rename_files_and_folders() {
 #     while IFS= read -r -d '' n; do
 #         for current_string in "${STRINGS_TO_REPLACE[@]}" ;
