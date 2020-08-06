@@ -25,7 +25,8 @@ rename_files_and_folders() {
     while IFS= read -r -d '' n; do
         for current_string in "${STRINGS_TO_REPLACE[@]}" ;
         do
-            if [[ "$n" == *"$current_string"* ]] || ! [[ "$n" =~ .*"alk19890105".* ]]; 
+            filename="${n##*/}"
+            if [[ "$filename" == *"$current_string"* ]] || ! [[ "$filename" == *"alk19890105"* ]]; 
             then
                 echo "Will rename $n"
                 break;
@@ -37,11 +38,42 @@ rename_files_and_folders() {
 
 rename_files_and_folders
 
+# rename_files_and_folders2() {
+#     while IFS= read -r -d '' m; do
+#         if ! [[ "$m" == *"alk19890105"* ]]; 
+#         then
+#             echo ">> Will rename $m"
+#         fi
+#         # echo "$m"
+#     done < <(find . \( -depth -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
+# }
+
+# rename_files_and_folders2
+
 ################################
 ################################
 ################################
 
 ## TODO: clean up draft work below
+
+## v0.3 deprecated
+
+# rename_files_and_folders() {
+#     while IFS= read -r -d '' n; do
+#         for current_string in "${STRINGS_TO_REPLACE[@]}" ;
+#         do
+#             if [[ "$n" == *"$current_string"* ]] || ! [[ "$n" =~ .*"alk19890105".* ]]; 
+#             then
+#                 echo "Will rename $n"
+#                 break;
+#             fi
+#         done
+#         # echo "$n"
+#     done < <(find . \( -depth -type d -path '*/\.*' -prune -o -not -name '.*' \) -print0)
+# }
+# rename_files_and_folders
+
+################################
 
 ## v0.2 deprecated
 # rename_files_and_folders() {
