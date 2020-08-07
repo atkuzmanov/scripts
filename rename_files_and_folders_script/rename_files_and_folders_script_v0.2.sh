@@ -16,21 +16,32 @@ rename_files_and_folders() {
         # justfilenamenopath="${n##*/}"
         
         filepathnodot="${n#.}"
-        # echo $filepathnodot
+        # echo "$filepathnodot"
 
         justfilenamenopath="${n##*/}"
-        # echo $justfilenamenopath
+        # echo "$justfilenamenopath"
+
+        justpathnofile=${filepathnodot%/*}
+        # echo "$justpathnofile"
+
 
         # if [[ -f "$filepathnodot" ]] && [[ ! -d "$filepathnodot" ]];
         # then
 
             for current_string in "${STRINGS_TO_REPLACE[@]}" ;
             do
-                if [[ "$filepathnodot" == *"$current_string"* ]]; 
+                if [[ "$justfilenamenopath" == *"$current_string"* ]]; 
                 then
-                    # echo "Will rename $filepathnodot"
-                    # test -e "$n" &&
+                    # echo "Will rename $justfilenamenopath"
+                    # test -e "$justfilenamenopath" &&
+                        # echo "Will rename $justfilenamenopath"
                         # rename -d "$current_string" "$n"
+
+                    newfilename=$(echo "$justfilenamenopath" | sed "s/$current_string//g")
+                    # echo "$newfilename"
+                    echo "$filepathnodot --> $justpathnofile$newfilename"
+                    # mv $filepathnodot $justpathnofile$newfilename
+
                     break;
                 fi
             done
