@@ -21,7 +21,7 @@ rename_files_and_folders() {
         justfilenamenopath="${n##*/}"
         # echo "$justfilenamenopath"
 
-        justpathnofile=${filepathnodot%/*}
+        justpathnofile=${n%/*}
         # echo "$justpathnofile"
 
 
@@ -39,8 +39,8 @@ rename_files_and_folders() {
 
                     newfilename=$(echo "$justfilenamenopath" | sed "s/$current_string//g")
                     # echo "$newfilename"
-                    echo "$filepathnodot --> $justpathnofile$newfilename"
-                    # mv $filepathnodot $justpathnofile$newfilename
+                    # echo "$filepathnodot --> $justpathnofile$newfilename"
+                    mv -v "$n" "$justpathnofile/$newfilename"
 
                     break;
                 fi
