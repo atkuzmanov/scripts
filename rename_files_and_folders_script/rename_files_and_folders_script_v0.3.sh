@@ -46,6 +46,43 @@ rename_files_remove_old_tags() {
 
 ################################
 
+rename_dirs_folders_remove_old_tags() {
+    while IFS= read -r -d '' n; do
+
+        filepathnodot="${n#.}"
+        # echo "$filepathnodot"
+
+        # justfilenamenopath="${n##*/}"
+        # echo "$justfilenamenopath"
+
+        # justpathnofile=${n%/*}
+        # echo "$justpathnofile"
+
+
+        # if [[ -f "$filepathnodot" ]] && [[ ! -d "$filepathnodot" ]];
+        # then
+
+            for current_string in "${STRINGS_TO_REPLACE[@]}" ;
+            do
+                if [[ "$n" == *"$current_string"* ]]; 
+                then
+                    # echo "Will rename $n"
+                    test -e "$n" &&
+                        newfilename=$(echo "$n" | sed "s/$current_string//g")
+                        # echo "$newfilename"
+                        mv -v "$n" "$newfilename"
+                    break;
+                fi
+            done
+
+        # fi
+    done < <(find . \( -type d -name "[!.]*" \) -print0)
+}
+
+rename_dirs_folders_remove_old_tags
+
+################################
+
 rename_files_add_new_tags() {
     while IFS= read -r -d '' n; do
         
@@ -69,7 +106,7 @@ rename_files_add_new_tags() {
     done < <(find . \( -type f -name "[!.]*" \) -print0)
 }
 
-rename_files_add_new_tags
+# rename_files_add_new_tags
 
 ################################
 ################################
