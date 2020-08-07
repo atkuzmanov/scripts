@@ -10,11 +10,9 @@ STRING_TO_ADD_IF_NOT_PRESENT="tag3"
 
 ################################
 
-rename_files_and_folders() {
+rename_files_remove_old_tags() {
     while IFS= read -r -d '' n; do
 
-        # justfilenamenopath="${n##*/}"
-        
         filepathnodot="${n#.}"
         # echo "$filepathnodot"
 
@@ -44,11 +42,35 @@ rename_files_and_folders() {
     done < <(find . \( -type f -name "[!.]*" \) -print0)
 }
 
-rename_files_and_folders
-
-
+# rename_files_remove_old_tags
 
 ################################
+
+rename_files_add_new_tags() {
+    while IFS= read -r -d '' n; do
+        
+        filepathnodot="${n#.}"
+        # echo "$filepathnodot"
+
+        justfilenamenopath="${n##*/}"
+        # echo "$justfilenamenopath"
+
+        justpathnofile=${n%/*}
+        # echo "$justpathnofile"
+
+        if [[ ! "$justfilenamenopath" == *"$STRING_TO_ADD_IF_NOT_PRESENT"* ]]; 
+        then
+            # echo "Will rename $justfilenamenopath"
+            test -e "$n" &&
+                newfilename="${justfilenamenopath%.*} $STRING_TO_ADD_IF_NOT_PRESENT.${justfilenamenopath##*.}"
+                mv -v "$n" "$justpathnofile/$newfilename"
+        fi
+
+    done < <(find . \( -type f -name "[!.]*" \) -print0)
+}
+
+rename_files_add_new_tags
+
 ################################
 ################################
 
