@@ -13,11 +13,11 @@
 > <https://stackoverflow.com/questions/6121091/get-file-directory-path-from-file-path/6121114>
 >
 > <https://stackoverflow.com/questions/13210880/replace-one-substring-for-another-string-in-shell-script>
->X
+>
 > <https://tldp.org/LDP/abs/html/string-manipulation.html>
 >
 > <https://stackoverflow.com/questions/16623835/remove-a-fixed-prefix-suffix-from-a-string-in-bash>
->
+>X
 > <https://unix.stackexchange.com/questions/311758/remove-specific-word-in-variable>
 >
 > <https://unix.stackexchange.com/questions/56810/adding-text-to-filename-before-extension>
@@ -207,3 +207,86 @@ In sh (AWS Codebuild / Ubuntu sh) I found that I need a single slash at the end,
 ---
 ---
 ---
+
+10.1. Manipulating Strings
+
+> References
+> <https://tldp.org/LDP/abs/html/string-manipulation.html>
+
+---
+---
+---
+
+Remove a fixed prefix/suffix from a string in Bash
+
+> References
+> <https://stackoverflow.com/questions/16623835/remove-a-fixed-prefix-suffix-from-a-string-in-bash>
+
+    $ foo=${string#"$prefix"}
+    $ foo=${foo%"$suffix"}
+    $ echo "${foo}"
+    o-wor
+
+...
+
+There are also ## and %% , which remove as much as possible if $prefix or $suffix contain wildcards. – pts May 18 '13 at 11:48
+
+Is there a way to combine the two in one line? I tried ${${string#prefix}%suffix} but it doesn't work. – static_rtti Mar 5 '14 at 8:18
+
+@static_rtti No, unfortunately you cannot nest parameter substitution like this. I know, it's a shame. – Adrian Frühwirth Mar 5 '14 at 8:34
+
+@AdrianFrühwirth : the whole language is a shame, but it's so useful :) – static_rtti Mar 5 '14 at 9:24
+
+Nvm, "bash substitution" in Google found what I wanted. – Tyler Nov 4 '14 at 0:59
+
+===
+
+Using sed:
+
+    $ echo "$string" | sed -e "s/^$prefix//" -e "s/$suffix$//"
+    o-wor
+
+Within the sed command, the `^` character matches text beginning with `$prefix`, and the trailing `$` matches text ending with `$suffix`.
+
+Adrian Frühwirth makes some good points in the comments below, but `sed` for this purpose can be very useful. The fact that the contents of $prefix and $suffix are interpreted by sed can be either good OR bad- as long as you pay attention, you should be fine. The beauty is, you can do something like this:
+
+    $ prefix='^.*ll'
+    $ suffix='ld$'
+    $ echo "$string" | sed -e "s/^$prefix//" -e "s/$suffix$//"
+    o-wor
+
+which may be what you want, and is both fancier and more powerful than bash variable substitution. If you remember that with great power comes great responsibility (as Spiderman says), you should be fine.
+
+A quick introduction to sed can be found at <http://evc-cit.info/cit052/sed_tutorial.html>
+
+A note regarding the shell and its use of strings:
+
+For the particular example given, the following would work as well:
+
+    $ echo $string | sed -e s/^$prefix// -e s/$suffix$//
+
+...but only because:
+
+ 1. echo doesn't care how many strings are in its argument list, and
+ 2. There are no spaces in $prefix and $suffix
+
+It's generally good practice to quote a string on the command line because even if it contains spaces it will be presented to the command as a single argument. We quote $prefix and $suffix for the same reason: each edit command to sed will be passed as one string. We use double quotes because they allow for variable interpolation; had we used single quotes the sed command would have gotten a literal `$prefix` and `$suffix` which is certainly not what we wanted.
+
+Notice, too, my use of single quotes when setting the variables `prefix` and `suffix`. We certainly don't want anything in the strings to be interpreted, so we single quote them so no interpolation takes place. Again, it may not be necessary in this example but it's a very good habit to get into.
+
+...
+
+Unfortunately, this is bad advice for several reasons: 1) Unquoted, $string is subject to word splitting and globbing. 2) $prefix and $suffix can contain expressions that sed will interpret, e.g. regular expressions or the character used as delimiter which will break the whole command. 3) Calling sed two times is not necessary (you can -e 's///' -e '///' instead) and the pipe could also be avoided. For example, consider string='./ *' and/or prefix='./' and see it break horribly due to 1) and 2). – Adrian Frühwirth May 19 '14 at 6:59
+
+Fun note: sed can take almost anything as a delimiter. In my case, since I was parsing prefix-directories out of paths, I couldn't use /, so I used sed "s#^$prefix##, instead. (Fragility: filenames can't contain #. Since I control the files, we're safe, there.) – Olie Oct 21 '14 at 21:24
+
+@Olie Filenames can contain any character except the slash and null character so unless you're in control you cannot assume a filename not to contain certain characters. – Adrian Frühwirth Feb 22 '15 at 23:53
+
+Yeah, don't know what I was thinking there. iOS maybe? Dunno. Filenames can certainly contain "#". No idea why I said that. :) – Olie Feb 23 '15 at 3:11
+
+@Olie: As I understood your original comment, you were saying that the limitation of your choice to use # as sed's delimiter meant that you couldn't handle files containing that character. – P Daddy Mar 4 '15 at 17:03
+
+---
+---
+---
+
