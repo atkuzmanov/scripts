@@ -17,7 +17,7 @@
 > <https://tldp.org/LDP/abs/html/string-manipulation.html>
 >
 > <https://stackoverflow.com/questions/16623835/remove-a-fixed-prefix-suffix-from-a-string-in-bash>
->X
+>
 > <https://unix.stackexchange.com/questions/311758/remove-specific-word-in-variable>
 >
 > <https://unix.stackexchange.com/questions/56810/adding-text-to-filename-before-extension>
@@ -290,3 +290,347 @@ Yeah, don't know what I was thinking there. iOS maybe? Dunno. Filenames can cert
 ---
 ---
 
+> References
+> <https://unix.stackexchange.com/questions/311758/remove-specific-word-in-variable>
+
+Remove specific word in variable
+
+Using `bash` substring replacement:
+```
+FOO=${FOO//$WORDTOREMOVE/}
+```
+The `//` replaces all occurences of the substring (`$WORDTOREMOVE`) with the content between `/` and `}`.  In this case nothing.
+
+For information on this and other ways to work with strings in bash, see the section [10.1. Manipulating Strings](http://tldp.org/LDP/abs/html/string-manipulation.html) of the [Advanced Bash-Scripting Guide](http://tldp.org/LDP/abs/html/).
+
+---
+---
+---
+
+> References
+> <https://unix.stackexchange.com/questions/56810/adding-text-to-filename-before-extension>
+
+adding text to filename before extension
+
+As the question is for `bash` there is no need for external utilities, since you can use [bash regexps][1]:
+
+<!-- language: lang-bash -->
+
+    for i in *.shp
+    do
+        mv -v "${i}" "${i%.*}_MYSUFFIX.${i##*.}"
+    done
+
+  [1]: https://www.tldp.org/LDP/abs/html/x17129.html
+
+---
+---
+---
+
+> References
+> <https://stackoverflow.com/questions/45799657/bash-adding-a-string-to-file-name>
+
+Bash adding a string to file name
+
+With bash this can be done simplier like:
+
+    for f in *;do
+    echo "$f" "${f%.*}hallo.${f##*.}"
+    done
+
+example:
+
+    $ ls -all
+    -rw-r--r-- 1 29847 29847    0 Aug 21 14:33 file1.txt
+    -rw-r--r-- 1 29847 29847    0 Aug 21 14:33 file2.txt
+    -rw-r--r-- 1 29847 29847    0 Aug 21 14:33 file3.txt
+    -rw-r--r-- 1 29847 29847    0 Aug 21 14:33 file4.txt
+    -rw-r--r-- 1 29847 29847    0 Aug 21 14:33 file5.txt 
+    
+    $ for f in *;do mv -v "$f" "${f%.*}hallo.${f##*.}";done
+    'file1.txt' -> 'file1hallo.txt'
+    'file2.txt' -> 'file2hallo.txt'
+    'file3.txt' -> 'file3hallo.txt'
+    
+    $ ls -all
+    -rw-r--r-- 1 29847 29847    0 Aug 21 14:33 file1hallo.txt
+    -rw-r--r-- 1 29847 29847    0 Aug 21 14:33 file2hallo.txt
+    -rw-r--r-- 1 29847 29847    0 Aug 21 14:33 file3hallo.txt
+
+This works because `${f%.*}` returns filename without extension - deletes everything (*) from the end (backwards) up to first/shortest found dot.
+
+On the other hand this one `${f##*.}` deletes everything from the beginning up to the longest found dot, returning only the extension.
+
+To overcome the extensionless files problem as pointed out in comments you can do something like this:
+
+    $ for f in *;do [[ "${f%.*}" != "${f}" ]] && echo "$f" "${f%.*}hallo.${f##*.}" || echo "$f" "${f%.*}hallo"; done
+    file1.txt file1hallo.txt
+    file2.txt file2hallo.txt
+    file3.txt file3hallo.txt
+    file4 file4hallo
+    file5 file5hallo
+
+If the file has not an extension then this will yeld true `"${f%.*}" == "${f}"`
+
+---
+---
+---
+
+> References
+> <https://linuxize.com/post/bash-functions/>
+
+Bash Functions
+
+```text
+Updated May 30, 2020
+
+5 min read
+
+A Bash function is essentially a set of commands that can be called numerous times. The purpose of a function is to help you make your bash scripts more readable and to avoid writing the same code repeatedly. Compared to most programming languages, Bash functions are somewhat limited.
+
+In this tutorial, we will cover the basics of Bash functions and show you how to use them in your shell scripts.
+
+Defining Bash Functions
+The syntax for declaring a bash function is straightforward. Functions may be declared in two different formats:
+
+The first format starts with the function name, followed by parentheses. This is the preferred and more used format.
+
+function_name () {
+  commands
+}
+Copy
+Single line version:
+
+function_name () { commands; }
+Copy
+The second format starts with the reserved word function, followed by the function name.
+
+function function_name {
+  commands
+}
+Copy
+Single line version:
+
+function function_name { commands; }
+Copy
+Few points to be noted:
+
+The commands between the curly braces ({}) are called the body of the function. The curly braces must be separated from the body by spaces or newlines.
+Defining a function doesn’t execute it. To invoke a bash function, simply use the function name. Commands between the curly braces are executed whenever the function is called in the shell script.
+The function definition must be placed before any calls to the function.
+When using single line “compacted” functions, a semicolon ; must follow the last command in the function.
+Always try to keep your function names descriptive.
+To understand this better, take a look at the following example:
+~/hello_world.sh
+#!/bin/bash
+
+hello_world () {
+   echo 'hello, world'
+}
+
+hello_world
+Copy
+Let’s analyze the code line by line:
+
+In line 3, we are defining the function by giving it a name. The curly brace { marks the start of the function’s body.
+Line 4 is the function body. The function body can contain multiple commands, statements and variable declarations.
+Line 5, the closing curly bracket }, defines the end of the hello_world function.
+In line 7 we are executing the function. You can execute the function as many times as you need.
+If you run the script, it will print hello, world.
+Variables Scope
+Global variables are variables that can be accessed from anywhere in the script regardless of the scope. In Bash, all variables by default are defined as global, even if declared inside the function.
+
+Local variables can be declared within the function body with the local keyword and can be used only inside that function. You can have local variables with the same name in different functions.
+
+To better illustrate how variables scope works in Bash, let’s consider this example:
+
+~/variables_scope.sh
+#!/bin/bash
+
+var1='A'
+var2='B'
+
+my_function () {
+  local var1='C'
+  var2='D'
+  echo "Inside function: var1: $var1, var2: $var2"
+}
+
+echo "Before executing function: var1: $var1, var2: $var2"
+
+my_function
+
+echo "After executing function: var1: $var1, var2: $var2"
+Copy
+The script starts by defining two global variables var1 and var2. Then there is an function that sets a local variable var1 and modifies the global variable var2.
+
+If you run the script, you should see the following output:
+Before executing function: var1: A, var2: B
+Inside function: var1: C, var2: D
+After executing function: var1: A, var2: D
+From the output above, we can conclude that:
+
+When a local variable is set inside the function body with the same name as an existing global variable, it will have precedence over the global variable.
+Global variables can be changed from within the function.
+Return Values
+Unlike functions in “real” programming languages, Bash functions don’t allow you to return a value when called. When a bash function completes, its return value is the status of the last statement executed in the function, 0 for success and non-zero decimal number in the 1 - 255 range for failure.
+
+The return status can be specified by using the return keyword, and it is assigned to the variable $?. The return statement terminates the function. You can think of it as the function’s exit status .
+
+~/return_values.sh
+#!/bin/bash
+
+my_function () {
+  echo "some result"
+  return 55
+}
+
+my_function
+echo $?
+Copy
+some result
+55
+To actually return an arbitrary value from a function, we need to use other methods. The simplest option is to assign the result of the function to a global variable:
+~/return_values.sh
+#!/bin/bash
+
+my_function () {
+  func_result="some result"
+}
+
+my_function
+echo $func_result
+Copy
+some result
+Another, better option to return a value from a function is to send the value to stdout using echo or printf like shown below:
+
+~/return_values.sh
+#!/bin/bash
+
+my_function () {
+  local func_result="some result"
+  echo "$func_result"
+}
+
+func_result="$(my_function)"
+echo $func_result
+Copy
+some result
+Instead of simply executing the function which will print the message to stdout, we are assigning the function output to the func_result variable using the $() command substitution. The variable can later be used as needed.
+
+Passing Arguments to Bash Functions
+To pass any number of arguments to the bash function simply put them right after the function’s name, separated by a space. It is a good practice to double-quote the arguments to avoid the misparsing of an argument with spaces in it.
+
+The passed parameters are $1, $2, $3 … $n, corresponding to the position of the parameter after the function’s name.
+The $0 variable is reserved for the function’s name.
+The $# variable holds the number of positional parameters/arguments passed to the function.
+The $* and $@ variables hold all positional parameters/arguments passed to the function.
+When double-quoted, "$*" expands to a single string separated by space (the first character of IFS) - "$1 $2 $n".
+When double-quoted, "$@" expands to separate strings - "$1" "$2" "$n".
+When not double-quoted, $* and $@ are the same.
+Here is an example:
+
+~/passing_arguments.sh
+#!/bin/bash
+
+greeting () {
+  echo "Hello $1"
+}
+
+greeting "Joe"
+Copy
+Hello Joe
+Conclusion
+A Bash function is a block of reusable code designed to perform a particular operation. Once defined, the function can be called multiple times within a script.
+You may also want to read about how to use a Bash function to create a memorable shortcut command for a longer command.
+If you have any questions or feedback, feel free to leave a comment.
+```
+
+---
+---
+---
+
+Pass arguments into a function
+
+> References
+> <https://bash.cyberciti.biz/guide/Pass_arguments_into_a_function>
+
+---
+---
+---
+
+Passing parameters to a Bash function
+
+> References
+> <https://stackoverflow.com/questions/6212219/passing-parameters-to-a-bash-function>
+
+There are two typical ways of declaring a function. I prefer the second approach.
+
+    function function_name {
+       command...
+    } 
+
+or 
+
+    function_name () {
+       command...
+    } 
+
+To call a function with arguments:
+
+    function_name "$arg1" "$arg2"
+
+The function refers to passed arguments by their position (not by name), that is $1, $2, and so forth. **$0** is the name of the script itself.
+
+Example:
+
+    function_name () {
+       echo "Parameter #1 is $1"
+    }
+
+Also, you need to call your function **after** it is declared. 
+
+    #!/usr/bin/env sh
+    
+    foo 1  # this will fail because foo has not been declared yet.
+    
+    foo() {
+        echo "Parameter #1 is $1"
+    }
+    
+    foo 2 # this will work.
+
+**Output:**
+
+<!-- language: lang-none -->
+
+    ./myScript.sh: line 2: foo: command not found
+    Parameter #1 is 2
+
+
+[Reference: Advanced Bash-Scripting Guide][1].
+
+[1]: http://tldp.org/LDP/abs/html/complexfunct.html
+
+...
+
+You have forgotten the spaces, try function name() {}. Maybe with a 'enter' before {} – lalo Nov 11 '13 at 14:09
+
+Good answer. My 2 cents: in shell constructs that reside in a file that is sourced (dotted) when needed, I prefer to use the function keyword and the (). My goal (in a file, not command line) is to increase clarity, not reduce the number of characters typed, viz, function myBackupFunction() compound-statement. – Terry Gardner Nov 27 '13 at 17:25
+
+@CMCDragonkai, the function keyword version is an extension; the other form works in all POSIX-compliant shells. – Charles Duffy May 4 '15 at 17:02
+
+@TerryGardner, consider that your attempts to increase clarity are reducing compatibility. – Charles Duffy May 4 '15 at 17:02
+
+@RonBurk, perhaps -- but even if we consider only clarity, the function keyword had guarantees in the old ksh-family shells that introduced it that modern bash don't honor (in such shells, function made variables local-by-default; in bash, it does not). As such, its use decreases clarity to anyone who knows, and might expect, the ksh behavior. See wiki.bash-hackers.org/scripting/obsolete – Charles Duffy Feb 28 '18 at 21:31
+
+---
+---
+---
+
+> References
+> <https://linuxacademy.com/blog/linux/conditions-in-bash-scripting-if-statements/>
+
+---
+---
+---
