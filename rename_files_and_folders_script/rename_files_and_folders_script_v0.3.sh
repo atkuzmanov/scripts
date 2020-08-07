@@ -3,6 +3,9 @@
 set -e
 
 ################################
+## WORKING
+## TODO: optimise
+################################
 
 declare -a STRINGS_TO_REPLACE
 STRINGS_TO_REPLACE=("tag1" "tag2")

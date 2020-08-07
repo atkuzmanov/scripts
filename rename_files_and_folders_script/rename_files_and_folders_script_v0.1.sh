@@ -3,6 +3,8 @@
 set -e
 
 ################################
+## TODO: wip not working yet
+################################
 
 declare -a STRINGS_TO_REPLACE
 STRINGS_TO_REPLACE=("tag1" "tag2")
@@ -22,8 +24,6 @@ STRING_TO_ADD_IF_NOT_PRESENT="tag3"
 ## https://stackoverflow.com/questions/15012631/rename-files-and-directories-recursively-under-ubuntu-bash
 ## https://superuser.com/questions/213134/recursively-rename-files-change-extension-in-linux
 ## https://stackoverflow.com/questions/965053/extract-filename-and-extension-in-bash
-
-## TODO: wip not working yet
 
 rename_files_and_folders() {
     while IFS= read -r -d '' n; do
